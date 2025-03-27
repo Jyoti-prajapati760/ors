@@ -68,9 +68,10 @@ th,tr,td{
   padding: 5px;
   text-align: center;
 }
-td>button{
+button{
   margin-left: 15px;
   background-color: rgb(250, 248, 215);
+  border-radius: 10px !important;
 }
 th{
   background-color:rgb(250, 248, 215) ;
@@ -83,4 +84,13 @@ tr:nth-child(even) {
 }
 .home{
   color: black  !important;
+}
+.search{
+text-align: center;
+/* margin: 10px; */
+}
+.search1{
+  border: 1px solid black;
+  border-radius: 10px;
+  margin: 10px;
 }

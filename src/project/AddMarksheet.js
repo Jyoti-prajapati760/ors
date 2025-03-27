@@ -18,7 +18,8 @@ function AddMarksheet() {
   const [studentId, setstudentId] = useState('');
   const [rollNo, setrollNo] = useState('');
   const [physics, setphysics] = useState('');
-  const [roleId, setroleId] = useState('');
+  const [chemistry, setchemistry] = useState('');
+  const [maths, setmaths] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
 
   const { id } = useParams();
@@ -28,7 +29,7 @@ function AddMarksheet() {
   useEffect(() => {
     if (id) {
       editMarksheet(id);
-      document.querySelector("#useredit").innerHTML = 'Edit Marksheet';
+      document.querySelector("#marksheetedit").innerHTML = 'Edit Marksheet';
     }
   }, [id]);
 
@@ -38,7 +39,7 @@ function AddMarksheet() {
     setIsEmpty(true);
 
     // Validate that all fields are filled
-    if (!name || !studentId || !rollNo || !physics || !roleId) {
+    if (!name || !studentId || !rollNo || !physics || !chemistry ||!maths) {
       return;
     }
 
@@ -51,9 +52,9 @@ function AddMarksheet() {
 
   // Function to add new Marksheet (POST request)
   const addMarksheet = () => {
-    fetch('https://manraj-ors-1.onrender.com/user', {
+    fetch('https://manraj-ors-1.onrender.com/marksheet', {
       method: 'POST',
-      body: JSON.stringify({ name, studentId, rollNo, physics, roleId }),
+      body: JSON.stringify({ name, studentId, rollNo, physics, chemistry ,maths}),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
     })
       .then(response => response.json())
@@ -66,9 +67,9 @@ function AddMarksheet() {
 
   // Function to update Marksheet (PUT request)
   const updateMarksheet = (id) => {
-    fetch('https://manraj-ors-1.onrender.com/user/' + id, {
+    fetch('https://manraj-ors-1.onrender.com/marksheet/' + id, {
       method: 'PUT',
-      body: JSON.stringify({ name, studentId, rollNo, physics, roleId }),
+      body: JSON.stringify({ name, studentId, rollNo, physics, chemistry,maths }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
     })
       .then(response => response.json())
@@ -82,14 +83,14 @@ function AddMarksheet() {
 
   // Fetch Marksheet data for editing (use correct API endpoint for Marksheet data)
   const editMarksheet = (id) => {
-    fetch('https://manraj-ors-1.onrender.com/user/' + id)
+    fetch('https://manraj-ors-1.onrender.com/marksheet/' + id)
       .then(response => response.json())
       .then(result => {
         setname(result.name);
         setstudentId(result.studentId);
         setrollNo(result.rollNo);
         setphysics(result.physics);
-        setroleId(result.roleId);
+        setchemistry(result.chemistry);
       })
       .catch((error) => console.error('Error:', error));
   };
@@ -100,7 +101,7 @@ function AddMarksheet() {
         <MDBCardBody>
           <MDBRow>
             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
-              <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="useredit">Add Marksheet</p>
+              <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="marksheetedit">Add Marksheet</p>
 
               {/* First Name */}
               <div className="d-flex flex-row align-items-center mb-4">
@@ -130,15 +131,20 @@ function AddMarksheet() {
                 <MDBIcon fas icon="lock me-3" size='lg' />
                 <MDBInput label='physics' id='physics' type='physics' value={physics} onChange={(e) => setphysics(e.target.value)} />
               </div>
-              {(isEmpty && !physics) && <p style={{ color: 'red' }}>physics is required</p>}
+          
 
 
-              {/* Role ID */}
+              {/* Chemistry */}
               <div className="d-flex flex-row align-items-center mb-4">
                 <MDBIcon fas icon="user-tag me-3" size='lg' />
-                <MDBInput label='Role ID' id='roleId' type='text' value={roleId} onChange={(e) => setroleId(e.target.value)} />
+                <MDBInput label='Chemistry' id='chemistry' type='text' value={chemistry} onChange={(e) => setchemistry(e.target.value)} />
               </div>
-              {(isEmpty && !roleId) && <p style={{ color: 'red' }}> Roll Id is most be impotanat</p>}
+            
+              {/* maths*/}
+              <div className="d-flex flex-row align-items-center mb-4">
+                <MDBIcon fas icon="user-tag me-3" size='lg' />
+                <MDBInput label='Maths' id='maths' type='text' value={maths} onChange={(e) => setmaths(e.target.value)} />
+              </div>
 
 
               {/* Submit Button */}

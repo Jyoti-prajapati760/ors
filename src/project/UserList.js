@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 export default function UserList() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]);  
+  const [filteredData, setFilteredData] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(""); 
   const param = useParams();
 
   // Fetch user list
@@ -13,6 +16,7 @@ export default function UserList() {
       .then((json) => {
         console.log(json);
         setData(json);
+        setFilteredData(json); 
       })
       .catch((error) => console.error('Error fetching users:', error));
   }
@@ -27,15 +31,33 @@ export default function UserList() {
       .then((response) => response.json())
       .then(() => {
         console.log(`User with ID ${id} deleted`);
-        userList(); // Refresh the list after deletion
+        userList(); 
       })
       .catch((error) => console.error('Error deleting user:', error));
+  };
+
+  // Search function
+  const handleSearch = () => {
+    const filtered = data.filter((user) => 
+      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.loginId.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
   };
 
   return (
     <>
       <div className={'list'}>
         <h3>User List</h3>
+        
+        {/* Search Input */}
+        <div className='search'>
+          <input className='search1' type="text" placeholder="Search user" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
+        </div>
+
         <table border={2}>
           <thead>
             <tr>
@@ -47,7 +69,7 @@ export default function UserList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {filteredData.map((item) => (
               <tr className={'list'} key={item._id}>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
@@ -55,7 +77,7 @@ export default function UserList() {
                 <td>{item.roleId}</td>
                 <td>
                   <Link to={`/AddUser/${item._id}`} style={{ marginRight: '10px' }}>Edit</Link>
-                  <button onClick={() =>userDeleteBtn (item._id)}>Delete</button>
+                  <button onClick={() => userDeleteBtn(item._id)}>Delete</button>
                 </td>
               </tr>
             ))}
